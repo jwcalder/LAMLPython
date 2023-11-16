@@ -1,2 +1,2 @@
-# LAMLPython
-Python Notebooks for Linear Algebra and Machine Learning Book
+# Python notebooks for LAML
+Python Notebooks for Linear Algebra and Machine Learning (LAML) Book
