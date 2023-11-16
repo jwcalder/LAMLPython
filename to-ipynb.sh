@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ "$#" -ne 1 ]; then
-    echo "Usage: generate-ipynb.sh <py file>"
+    echo "Usage: to-ipynb.sh <py file>"
     echo "Converts py file to ipynb."
     exit 1
 fi
