@@ -18,7 +18,7 @@ ipynb-py-convert $pyfile "$(dirname "$pyfile")/$(basename "$pyfile" .py).ipynb"
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	sed -i '' 's/pip install/#pip install/' $pyfile
 else
-	sed -i '' 's/pip install/#pip install/' $pyfile
+	sed -i 's/pip install/#pip install/' $pyfile
 fi
 
 
