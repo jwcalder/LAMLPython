@@ -125,7 +125,7 @@ Let's run PCA on the MNIST dataset to see an application to real data. We will u
 """
 
 # %%
-pip install -q graphlearning
+#pip install -q graphlearning
 
 # %%
 import graphlearning as gl
@@ -264,6 +264,7 @@ pca_plot(Y,Vals,Mean,P)
 
 #Plot without the extra point, to zoom in
 pca_plot(Y[:-1,:],Vals,Mean,P)
+plt.show()
 
 # %%
 """
@@ -277,12 +278,4 @@ pca_plot(Y[:-1,:],Vals,Mean,P)
 
 """
 
-# %%
-import numpy as np
 
-X = np.array([[1,2],[3,4]])
-Y = np.array([1,2])
-print(X)
-print(Y)
-print(Y[:,None])
-print(Y[None,:])
