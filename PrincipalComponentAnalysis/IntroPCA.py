@@ -207,7 +207,7 @@ labels = labels[ind]
 
 #Number of digits
 num = 2
-X = data[labels <= num] #subset to 0s and 1s
+X = data[labels <= num] #subset to <= num
 L = labels[labels <= num] #corresponding labels
 
 #PCA
