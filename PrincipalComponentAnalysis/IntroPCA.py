@@ -143,9 +143,8 @@ Let's find the top principal components of the MNIST dataset.
 from scipy import sparse
 import numpy as np
 
-ind = labels <=1
 #Centered covariance matrix
-X = data[ind,:] - np.mean(data[ind,:],axis=0)
+X = data - np.mean(data,axis=0)
 S = X.T@X
 
 #Use eigsh to get subset of eigenvectors
@@ -192,6 +191,37 @@ for i in range(k):
 # %%
 gl.utils.image_grid(Means,n_rows=1,n_cols=k,title='Mean images of each class', fontsize=20)
 gl.utils.image_grid(np.swapaxes(P[:,:,:min(10,num_comps)],1,2),title='Principal Components',normalize=True, fontsize=20)
+
+# %%
+"""
+# Low dimensional embedding
+
+Let's use PCA to obtain a low dimensional embedding of the MNIST digits. We'll use digits 0--2, you can try others. We randmly subsample down to 5000 images to make the plots less cluttered.
+"""
+
+# %%
+#Random subsample
+ind = np.random.choice(data.shape[0],size=5000)
+data = data[ind,:]
+labels = labels[ind]
+
+#Number of digits
+num = 2
+X = data[labels <= num] #subset to 0s and 1s
+L = labels[labels <= num] #corresponding labels
+
+#PCA
+mean = np.mean(X,axis=0)
+S = (X-mean).T@(X-mean)
+vals, vecs = sparse.linalg.eigsh(S, k=2, which='LM')
+vals, Q = vals[::-1], vecs[:,::-1] #Returns in opposite order
+
+#Dimension reduction
+Y = X@Q
+
+#Plot
+plt.figure()
+plt.scatter(Y[:,0],Y[:,1],c=L)
 
 # %%
 """
