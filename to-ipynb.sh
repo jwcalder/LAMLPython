@@ -6,23 +6,9 @@ if [ "$#" -ne 1 ]; then
 fi
 pyfile=$1
 
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-#	sed -i '' 's/#pip install/pip install/' $pyfile
-#else
-#	sed -i 's/#pip install/pip install/' $pyfile
-#fi
-
-
 echo "Converting $pyfile to "$(dirname "$pyfile")/$(basename "$pyfile" .py).ipynb"..."
 
-sed 's/#pip install/pip install/' $pyfile | sed '/plt.figure/d' | sed '/plt.ion/d' > temp.py
+sed 's/#pip install/pip install/' $pyfile | sed '/plt.ion/d' > temp.py
 ipynb-py-convert temp.py "$(dirname "$pyfile")/$(basename "$pyfile" .py).ipynb"
 rm temp.py
-
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-#	sed -i '' 's/pip install/#pip install/' $pyfile
-#else
-#	sed -i 's/pip install/#pip install/' $pyfile
-#fi
-
 
