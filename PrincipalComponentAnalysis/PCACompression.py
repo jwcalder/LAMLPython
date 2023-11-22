@@ -84,7 +84,7 @@ To compress the image, we project the image blocks onto the top k singular vecto
 """
 
 # %%
-for num_comps in [1,10,20,40,80]:
+for num_comps in [1,5,10,20,40,80]:
 
     #Get top singular vectors
     V = V_all[:,:num_comps]
