@@ -9,13 +9,32 @@ We consider here an application of PCA to image compression. We first load an im
 #pip install -q graphlearning
 
 # %%
+"""
+Let's load an image and display it.
+"""
+
+# %%
 import graphlearning as gl
 import matplotlib.pyplot as plt
-from scipy import sparse
-import numpy as np
 plt.ion()
 
 img = gl.datasets.load_image('chairtoy')
+plt.figure()
+plt.imshow(img)
+
+#Check data range and shape
+print('Pixel intensity range: (%d,%d)'%(img.min(),img.max()))
+print(img.shape)
+
+# %%
+"""
+Now let's display the truncated SVD. 
+"""
+
+# %%
+from scipy import sparse
+import numpy as np
+
 
 X = np.hstack((img[:,:,0],img[:,:,1],img[:,:,2]))
 
@@ -27,98 +46,80 @@ for k in [1,5,25,50,100,200]:
     imgk = np.stack((Xk[:,:512],Xk[:,512:1024],Xk[:,1024:]),axis=2)
     plt.figure()
     plt.imshow(imgk)
+    plt.title('%d Singular Vectors'%k)
+
 
 # %%
 """
-Let's load the cameraman image.
+For block-based compression, we'll convet the image to 8x8 patches. The image is 512x512 so this gives 4096 patches, each with 8x8x3=192 numbers (RGB for each pixel).
 """
 
-## %%
-#import matplotlib.pyplot as plt
-#import graphlearning as gl
-#
-##Load and display image
-#I = gl.datasets.load_image('cameraman')
-#plt.figure(figsize=(10,10))
-#plt.imshow(I,cmap='gray')
-#
-##Check data type of image
-#print('Data type: '+str(I.dtype))
-#print('Pixel intensity range: (%d,%d)'%(I.min(),I.max()))
-#
-##Print image shape
-#print(I.shape)
-#
-## %%
-#"""
-#Let's now convert the image into 8x8 patches. The image is 512x512 so this gives 4096 patches, each with 8x8=64 pixels.
-#"""
-#
-## %%
-#X = image_to_patches(I,patch_size=(8,8))
-#
-#print(X.shape)
-#num_patches = (512/8)**2
-#print(num_patches)
-#
-## %%
-#"""
-#To compress the image, we run PCA on the patches, and project the image to the best linear subspace obtained by PCA.
-#"""
-#
-## %%
-#from scipy.sparse import linalg
-#import numpy as np
-#
-##Number of principal components to use
-#num_comps = 5
-#
-##Compute the principal components
-#Vals, P = linalg.eigsh(X.T@X,k=num_comps,which='LM')
-#
-##Compress the image by projecting to the linear subspace spanned by P
-#X_compressed = X@P
-#print(X_compressed.shape)
-#
-##Compute size of compressed image and compression ratio
-#compressed_size = X_compressed.size + P.size
-#comp_ratio = I.size/compressed_size
-#print('Compression ratio: %.1f:1'%comp_ratio)
-#
-## %%
-#"""
-#Let's now decompress the image by changing coordinates back to the standard ones. We'll also show the reconstructed image and the error between the original and reconstruction.
-#
-#The reconstruction quality in image compression is measured by the peak signal to noise ratio (PSNR) in dB. PSNR values between 30dB and 50dB are acceptable in image compression.
-#"""
-#
-## %%
-#import matplotlib.pyplot as plt
-#import numpy as np
-#
-##Decompress image
-#X_decompressed = X_compressed@P.T
-#print(X_decompressed.shape)
-#I_decompressed = patches_to_image(X_decompressed,I.shape,patch_size=(8,8))
-#print(I_decompressed.shape)
-#
-##Decompress and clip image to [0,1]
-#I_decompressed = np.clip(I_decompressed,0,1)
-#
-##Plot decompressed (reconstructed image) and difference image
-#plt.figure(figsize=(30,10))
-#plt.imshow(np.hstack((I,I_decompressed, I-I_decompressed+0.5)), cmap='gray', vmin=0, vmax=1)
-#
-##Compute Peak Signal to Noise Ratio (PSNR)
-#MSE = np.sum((I-I_decompressed)**2)/I.size
-#PSNR = 10*np.log10(np.max(I)**2/MSE)
-#print('PSNR: %.2f dB'%PSNR)
-#plt.show()
-#
-## %%
-#"""
-###Exercises
-#1. Write Python code to perform row-wise compression of the cameraman image. Essentially you can just set X=I and avoid the image_to_patches and patches_to_image functions. Compare the PSNR at similar compression ratios to the patch/block-wise compression used in this notebook.
+# %%
+m = 8
+X = gl.utils.image_to_patches(img,patch_size=(m,m))
+print(X.shape)
+grid = gl.utils.color_image_grid(X,n_rows=5,n_cols=10)
+
+# %%
+"""
+Now let's do an SVD (or PCA) on the blocks. We show to top 50 singular vectors, which start out as slowly varying low frequencies, with the later singular vectors capturing fine scale details and texture in the image blocks. 
+"""
+
+# %%
+from scipy import sparse
+
+cov_matrix = X.T@X
+Vals, V = sparse.linalg.eigsh(cov_matrix,k=3*m*m-1,which='LM')
+Vals = Vals[::-1]
+V_all = V[:,::-1]
+
+P = V_all.T.copy()
+P = P - P.min()
+P = P/P.max()
+gl.utils.color_image_grid(P,n_rows=5,n_cols=10)
+
+"""
+To compress the image, we project the image blocks onto the top k singular vectors and the reconstruc the image from its blocks.
+"""
+
+# %%
+for num_comps in [1,10,20,40,80]:
+
+    #Get top singular vectors
+    V = V_all[:,:num_comps]
+
+    #Compress and decompress the image
+    comp_X = X@V
+    decomp_X = comp_X@V.T
+
+    #Compute compression ration
+    comp_size = V.shape[0]*V.shape[1] + comp_X.shape[0]*comp_X.shape[1]
+    comp_ratio = X.shape[0]*X.shape[1]/comp_size
+
+    #Recontruct image from patches for visualization
+    img_comp = gl.utils.patches_to_image(decomp_X, (img.shape[0],img.shape[1]), patch_size=(m,m))
+    img_comp = np.clip(img_comp,0,1)
+
+    #Print PSNR
+    MSE = np.sum((X-decomp_X)**2)/X.shape[0]/X.shape[1]
+    PSNR = 10*np.log10(np.max(X)**2/MSE)
+    print('%f,%f'%(comp_ratio,PSNR))
+
+    #Plot compressed and difference image
+    img_diff = np.clip(img_comp - img + 0.5,0,1)
+    plt.figure()
+    plt.imshow(np.hstack((img_comp,img_diff)))
+    plt.title('Compression Raio: %.1f:1'%comp_ratio)
+
+
+# %%
+"""
+## Exercises
+1. Play around with different block sizes. What is the best for compression?
+2. Compare the PSNR for the original row-based compression with block-based compression. How does the PSNR compare at the same label rates. 
+3. Generate a plot of the singular values for the image and the blocks. Which one decays faster? 
+4. Project the blocks into two dimensions to visualize the block space. 
+5. [Challenging] Write a compression algorithm that chooses the best singular vectors to use for each block, instead of the top $k$. To do this, choose a threshold $\mu>0$, project the image blocks onto all of the singular vectors, and then discard (i.e., set to zero) any coefficient (i.e., PCA coordinate) that is smaller than $\mu$. Reconstruct the image from the truncated blocks, and compute the compression ratio assuming you do not have to store the zeros (the coefficients that were threshold ed to zero), and assume you don't need to store the singular vectors (the setting is that you learn good singular vectors, and then share them between the encoder and decoder, so only the coefficients must be transmitted/stored). How does this compare with the block-based method in this notebook? 
 #"""
 
 
