@@ -104,7 +104,7 @@ for num_comps in [1,5,10,20,40,80]:
     #Print PSNR
     MSE = np.sum((X-decomp_X)**2)/X.shape[0]/X.shape[1]
     PSNR = 10*np.log10(np.max(X)**2/MSE)
-    print('%f,%f'%(comp_ratio,PSNR))
+    print('Compression ratio: %.1f:1, PSNR: %.1f'%(comp_ratio,PSNR))
 
     #Plot compressed and difference image
     img_diff = np.clip(img_comp - img + 0.5,0,1)
