@@ -78,6 +78,7 @@ P = P - P.min()
 P = P/P.max()
 gl.utils.color_image_grid(P,n_rows=5,n_cols=10)
 
+# %%
 """
 To compress the image, we project the image blocks onto the top k singular vectors and the reconstruc the image from its blocks.
 """
