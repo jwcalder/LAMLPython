@@ -28,18 +28,29 @@ print(img.shape)
 
 # %%
 """
-Now let's display the truncated SVD. 
+Now let's display the truncated SVD. Since the $m\times n$ data matrix $X$ below has far more columns than rows, i.e., $m \ll n$, it is expensive to form the $n\times n$ matrix $X^TX$ and find its top eigenvalues. In this case, an SVD is faster, using scipy.sparse.linalg.svds. 
+
+As an aside, if you inspect the code of svds in scipy, it uses the eigensolver eigsh on $X^TX$, but it does it in such a way that the matrix $X^TX$ is never explicitly computed! The method is similar to the power iteration, using that you can compute $X^TX\mathbf{x} = X^T(X\mathbf{x})$ without ever forming $X^TX$. 
 """
 
 # %%
 from scipy import sparse
 import numpy as np
-
+import time
 
 X = np.hstack((img[:,:,0],img[:,:,1],img[:,:,2]))
 
-vals,Q = sparse.linalg.eigsh(X.T@X,k=500)
-Q = Q[:,::-1]
+#SVD (order of singular values not guaranteed so we have to sort)
+t0 = time.time()
+P,S,QT = sparse.linalg.svds(X,k=500)
+print('SVD time: %.2f seconds'%(time.time()-t0))
+ind = np.argsort(-S)
+Q = QT[ind,:].T #Scipy returns the SVD transposed
+
+#Compare execution time to eigsh
+t0 = time.time()
+sparse.linalg.eigsh(X.T@X,k=500,which='LM')
+print('Eigs time: %.2f seconds'%(time.time()-t0))
 
 for k in [1,5,25,50,100,200]:
     Xk = np.clip(X@Q[:,:k]@Q[:,:k].T,0,1)
@@ -63,17 +74,25 @@ grid = gl.utils.color_image_grid(X,n_rows=5,n_cols=10)
 # %%
 """
 Now let's do an SVD (or PCA) on the blocks. We show to top 50 singular vectors, which start out as slowly varying low frequencies, with the later singular vectors capturing fine scale details and texture in the image blocks. 
+
+Here, the $m\times n$ matrix $X$ has far more rows than columns, so $m \gg n$. In this case, it is more efficient to compute $X^TX$, which is a smaller $n\times n$ matrix and compute its eigenvectors, instead of performing an SVD
 """
 
 # %%
 from scipy import sparse
+import time
 
-cov_matrix = X.T@X
-Vals, V = sparse.linalg.eigsh(cov_matrix,k=3*m*m-1,which='LM')
-Vals = Vals[::-1]
-V_all = V[:,::-1]
+t0 = time.time()
+Vals, Q = sparse.linalg.eigsh(X.T@X,k=3*m*m-1,which='LM')
+Q_all = Q[:,::-1] #Eigenvalues are returned in opposite order
+print('Eigsh time: %.2f seconds'%(time.time()-t0))
 
-P = V_all.T.copy()
+#SVD for comparison
+t0 = time.time()
+sparse.linalg.svds(X,k=3*m*m-1)
+print('SVD time: %.2f seconds'%(time.time()-t0))
+
+P = Q_all.T.copy()
 P = P - P.min()
 P = P/P.max()
 gl.utils.color_image_grid(P,n_rows=5,n_cols=10)
@@ -87,14 +106,14 @@ To compress the image, we project the image blocks onto the top k singular vecto
 for num_comps in [1,5,10,20,40,80]:
 
     #Get top singular vectors
-    V = V_all[:,:num_comps]
+    Q = Q_all[:,:num_comps]
 
     #Compress and decompress the image
-    comp_X = X@V
-    decomp_X = comp_X@V.T
+    comp_X = X@Q
+    decomp_X = comp_X@Q.T
 
     #Compute compression ration
-    comp_size = V.shape[0]*V.shape[1] + comp_X.shape[0]*comp_X.shape[1]
+    comp_size = Q.shape[0]*Q.shape[1] + comp_X.shape[0]*comp_X.shape[1]
     comp_ratio = X.shape[0]*X.shape[1]/comp_size
 
     #Recontruct image from patches for visualization
