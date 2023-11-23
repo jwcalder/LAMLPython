@@ -28,9 +28,9 @@ print(img.shape)
 
 # %%
 """
-Now let's display the truncated SVD. Since the $m\times n$ data matrix $X$ below has far more columns than rows, i.e., $m \ll n$, it is expensive to form the $n\times n$ matrix $X^TX$ and find its top eigenvalues. In this case, an SVD is faster, using scipy.sparse.linalg.svds. 
+Now let's display the truncated SVD. Since the $m\times n$ data matrix $X$ below has far more columns than rows, i.e., $m \ll n$, it is expensive to form the $n\times n$ matrix $X^TX$ and find its top eigenvalues. In this case, an SVD is faster, using scipy.sparse.linalg.svds, or we can compute the eigenvectors of $XX^T$, which is a smaller $m\times m$ matrix$. In fact the latter is fastest, as shown in the code below, which also compares against full SVD and Eig operations, though these are not always tractable with very large and/or high dimensional data sets.
 
-As an aside, if you inspect the code of svds in scipy, it uses the eigensolver eigsh on $X^TX$, but it does it in such a way that the matrix $X^TX$ is never explicitly computed! The method is similar to the power iteration, using that you can compute $X^TX\mathbf{x} = X^T(X\mathbf{x})$ without ever forming $X^TX$. 
+As an aside, if you inspect the code of svds in scipy, it uses the eigensolver eigsh on $X^TX$, but it does it in such a way that the matrix $X^TX$ is never explicitly computed! The method is similar to the power iteration, using that you can compute $X^TX\mathbf{x} = X^T(X\mathbf{x})$ without ever forming $X^TX$. Thus, if $X$ is $m\times n$, the SVD solver computes $X^TX\mathbf{x}$ in $O(2mn)$ operations, compared to $O(n^2)$ operations by forming $X^TX$ directly. On the other hand, working with $XX^T$ requires only $O(m^2)$ operations to compute $XX^T\mathbf{x}$. 
 """
 
 # %%
@@ -40,24 +40,50 @@ import time
 
 X = np.hstack((img[:,:,0],img[:,:,1],img[:,:,2]))
 
+#How many singular vectors to compute
+num_eig = 50
+
 #SVD (order of singular values not guaranteed so we have to sort)
 t0 = time.time()
-P,S,QT = sparse.linalg.svds(X,k=500)
-print('SVD time: %.2f seconds'%(time.time()-t0))
+P,S,QT = sparse.linalg.svds(X,k=num_eig)
+print('SVD of X time: %.2f seconds'%(time.time()-t0))
 ind = np.argsort(-S)
 Q = QT[ind,:].T #Scipy returns the SVD transposed
 
-#Compare execution time to eigsh
+#Compare execution time to eigsh for X^TX
 t0 = time.time()
-sparse.linalg.eigsh(X.T@X,k=500,which='LM')
-print('Eigs time: %.2f seconds'%(time.time()-t0))
+Vals, Q = sparse.linalg.eigsh(X.T@X,k=num_eig,which='LM')
+print('X^TX Eigs time: %.2f seconds'%(time.time()-t0))
+Q = Q[:,::-1] #Eigenvalues are returned in opposite order
+
+#Compare execution time to eigsh for XX^T
+t0 = time.time()
+Vals, P = sparse.linalg.eigsh(X@X.T,k=num_eig,which='LM')
+Q = X.T@P@np.diag(1/np.sqrt(Vals)) #Convert from left to right singular vectors
+print('XX^T Eigs time: %.2f seconds'%(time.time()-t0))
+Q = Q[:,::-1] #Eigenvalues are returned in opposite order
+
+#Time for full eig or svd
+t0 = time.time()
+np.linalg.svd(X)
+print('X full svd time: %.2f seconds'%(time.time()-t0))
+
+t0 = time.time()
+np.linalg.eigh(X.T@X)
+print('X^TX full Eigs time: %.2f seconds'%(time.time()-t0))
+
+t0 = time.time()
+np.linalg.eigh(X@X.T)
+print('XX^T full Eigs time: %.2f seconds'%(time.time()-t0))
+
 
 for k in [1,5,25,50,100,200]:
-    Xk = np.clip(X@Q[:,:k]@Q[:,:k].T,0,1)
-    imgk = np.stack((Xk[:,:512],Xk[:,512:1024],Xk[:,1024:]),axis=2)
-    plt.figure()
-    plt.imshow(imgk)
-    plt.title('%d Singular Vectors'%k)
+    if k <= num_eig:
+        Xk = np.clip(X@Q[:,:k]@Q[:,:k].T,0,1)
+        imgk = np.stack((Xk[:,:512],Xk[:,512:1024],Xk[:,1024:]),axis=2)
+        plt.figure()
+        plt.imshow(imgk)
+        plt.title('%d Singular Vectors'%k)
 
 
 # %%
@@ -75,7 +101,7 @@ grid = gl.utils.color_image_grid(X,n_rows=5,n_cols=10)
 """
 Now let's do an SVD (or PCA) on the blocks. We show to top 50 singular vectors, which start out as slowly varying low frequencies, with the later singular vectors capturing fine scale details and texture in the image blocks. 
 
-Here, the $m\times n$ matrix $X$ has far more rows than columns, so $m \gg n$. In this case, it is more efficient to compute $X^TX$, which is a smaller $n\times n$ matrix and compute its eigenvectors, instead of performing an SVD
+Here, the $m\times n$ matrix $X$ has far more rows than columns, so $m \gg n$. In this case, it is more efficient to compute $X^TX$, which is a smaller $n\times n$ matrix and compute its eigenvectors, instead of performing an SVD. We perform a full eigendecomposition, since we want all eigenvectors for this simulation. 
 """
 
 # %%
@@ -83,13 +109,13 @@ from scipy import sparse
 import time
 
 t0 = time.time()
-Vals, Q = sparse.linalg.eigsh(X.T@X,k=3*m*m-1,which='LM')
+Vals, Q = np.linalg.eigh(X.T@X)
 Q_all = Q[:,::-1] #Eigenvalues are returned in opposite order
-print('Eigsh time: %.2f seconds'%(time.time()-t0))
+print('Eigh time: %.2f seconds'%(time.time()-t0))
 
 #SVD for comparison
 t0 = time.time()
-sparse.linalg.svds(X,k=3*m*m-1)
+np.linalg.svd(X)
 print('SVD time: %.2f seconds'%(time.time()-t0))
 
 P = Q_all.T.copy()
