@@ -30,7 +30,7 @@ print(img.shape)
 """
 Now let's display the truncated SVD. Since the $m\times n$ data matrix $X$ below has far more columns than rows, i.e., $m \ll n$, it is expensive to form the $n\times n$ matrix $X^TX$ and find its top eigenvalues. In this case, an SVD is faster, using scipy.sparse.linalg.svds, or we can compute the eigenvectors of $XX^T$, which is a smaller $m\times m$ matrix. In fact the latter is fastest, as shown in the code below, which also compares against full SVD and Eig operations, though these are not always tractable with very large and/or high dimensional data sets.
 
-As an aside, if you inspect the code of svds in scipy, it uses the eigensolver eigsh on $X^TX$, but it does it in such a way that the matrix $X^TX$ is never explicitly computed! The method is similar to the power iteration, using that you can compute $X^TX\mathbf{x} = X^T(X\mathbf{x})$ without ever forming $X^TX$. Thus, if $X$ is $m\times n$, the SVD solver computes $X^TX\mathbf{x}$ in $O(2mn)$ operations, compared to $O(n^2)$ operations by forming $X^TX$ directly. On the other hand, working with $XX^T$ requires only $O(m^2)$ operations to compute $XX^T\mathbf{x}$. 
+As an aside, if you inspect the code of svds in scipy, it uses the eigensolver eigsh on $X^TX$, but it does it in such a way that the matrix $X^TX$ is never explicitly computed! The method is similar to the power iteration, using that you can compute $X^TX\mathbf{x} = X^T(X\mathbf{x})$ without ever forming $X^TX$. Thus, if $X$ is $m\times n$, the SVD solver computes $X^TX\mathbf{x}$ in $O(2mn)$ operations, compared to $O(n^2)$ operations by forming $X^TX$ directly. On the other hand, working with $XX^T$ requires only $O(m^2)$ operations to compute $XX^T\mathbf{x}$. As another note, when using svd it is faster to add the flag `full_matrices = False` which truncates to the rank of $X$ automatically.
 """
 
 # %%
@@ -67,12 +67,12 @@ Q = Q[:,::-1] #Eigenvalues are returned in opposite order
 
 #Time for full eig or svd
 t0 = time.time()
-np.linalg.svd(X)
+np.linalg.svd(X,full_matrices=False)
 print('Numpy X full svd time: %.2f seconds'%(time.time()-t0))
 
 #Time for full eig or svd
 t0 = time.time()
-linalg.svd(X)
+linalg.svd(X,full_matrices=False)
 print('Scipy X full svd time: %.2f seconds'%(time.time()-t0))
 
 t0 = time.time()
@@ -128,12 +128,12 @@ Q_all = Q[:,::-1] #Eigenvalues are returned in opposite order
 
 #SVD for comparison
 t0 = time.time()
-np.linalg.svd(X)
+np.linalg.svd(X,full_matrices=False)
 print('Numpy SVD time: %.2f seconds'%(time.time()-t0))
 
 #SVD for comparison
 t0 = time.time()
-linalg.svd(X)
+linalg.svd(X,full_matrices=False)
 print('Scipy SVD time: %.2f seconds'%(time.time()-t0))
 
 #Compare to sklearn
