@@ -36,12 +36,14 @@ As an aside, if you inspect the code of svds in scipy, it uses the eigensolver e
 # %%
 from scipy import sparse
 import numpy as np
+from scipy import linalg
+from sklearn.decomposition import PCA
 import time
 
 X = np.hstack((img[:,:,0],img[:,:,1],img[:,:,2]))
 
 #How many singular vectors to compute
-num_eig = 50
+num_eig = 500
 
 #SVD (order of singular values not guaranteed so we have to sort)
 t0 = time.time()
@@ -66,7 +68,12 @@ Q = Q[:,::-1] #Eigenvalues are returned in opposite order
 #Time for full eig or svd
 t0 = time.time()
 np.linalg.svd(X)
-print('X full svd time: %.2f seconds'%(time.time()-t0))
+print('Numpy X full svd time: %.2f seconds'%(time.time()-t0))
+
+#Time for full eig or svd
+t0 = time.time()
+linalg.svd(X)
+print('Scipy X full svd time: %.2f seconds'%(time.time()-t0))
 
 t0 = time.time()
 np.linalg.eigh(X.T@X)
@@ -75,6 +82,12 @@ print('X^TX full Eigs time: %.2f seconds'%(time.time()-t0))
 t0 = time.time()
 np.linalg.eigh(X@X.T)
 print('XX^T full Eigs time: %.2f seconds'%(time.time()-t0))
+
+#Compare to sklearn
+t0 = time.time()
+pca = PCA(n_components=num_eig)
+pca.fit(X)
+print('sklearn pca time: %.2f seconds'%(time.time()-t0))
 
 
 for k in [1,5,25,50,100,200]:
@@ -110,13 +123,19 @@ import time
 
 t0 = time.time()
 Vals, Q = np.linalg.eigh(X.T@X)
-Q_all = Q[:,::-1] #Eigenvalues are returned in opposite order
 print('Eigh time: %.2f seconds'%(time.time()-t0))
+Q_all = Q[:,::-1] #Eigenvalues are returned in opposite order
 
 #SVD for comparison
 t0 = time.time()
 np.linalg.svd(X)
-print('SVD time: %.2f seconds'%(time.time()-t0))
+print('Numpy SVD time: %.2f seconds'%(time.time()-t0))
+
+#SVD for comparison
+t0 = time.time()
+linalg.svd(X)
+print('Scipy SVD time: %.2f seconds'%(time.time()-t0))
+
 
 P = Q_all.T.copy()
 P = P - P.min()
