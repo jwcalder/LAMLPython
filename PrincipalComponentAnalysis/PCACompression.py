@@ -136,6 +136,11 @@ t0 = time.time()
 linalg.svd(X)
 print('Scipy SVD time: %.2f seconds'%(time.time()-t0))
 
+#Compare to sklearn
+t0 = time.time()
+pca = PCA()
+pca.fit(X)
+print('sklearn pca time: %.2f seconds'%(time.time()-t0))
 
 P = Q_all.T.copy()
 P = P - P.min()
