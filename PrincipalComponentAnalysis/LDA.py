@@ -2,12 +2,7 @@
 """
 # Linear Discriminant Analysis (LDA)
 
-This notebook gives a brief introduction to Linear Discriminant Analysis (LDA).
-"""
-
-# %%
-"""
-Let us first define some helper functions that will compute LDA and PCA for us.
+This notebook gives a brief introduction to Linear Discriminant Analysis (LDA). Let us first define some helper functions that will compute LDA and PCA for us.
 """
 
 # %%
@@ -31,7 +26,7 @@ def lda(X,labels,k=2,lam=1e-10):
     return X@V
 
 
-#Computes principle components
+#Computes principal components
 def pca_comp(X,k=2):
 
     M = (X - np.mean(X,axis=0)).T@(X - np.mean(X,axis=0))
@@ -85,7 +80,6 @@ We first consider a toy data set in three dimensions
 """
 
 # %%
-
 import matplotlib.pyplot as plt
 import numpy as np
 plt.ion()
@@ -120,7 +114,6 @@ Let's now run this on MNIST and compare to PCA.
 #pip install -q graphlearning
 
 # %%
-
 import graphlearning as gl
 import numpy as np
 import matplotlib.pyplot as plt
