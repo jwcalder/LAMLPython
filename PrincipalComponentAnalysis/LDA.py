@@ -10,7 +10,7 @@ This notebook gives a brief introduction to Linear Discriminant Analysis (LDA).
 Let us first define some helper functions that will compute LDA and PCA for us.
 """
 
-
+# %%
 import numpy as np
 from scipy import sparse
 
