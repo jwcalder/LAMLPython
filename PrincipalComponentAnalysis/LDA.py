@@ -69,7 +69,7 @@ def lda_cov(X,labels):
 
     means = np.array(means)
     counts = np.array(counts)
-    Y = (means - np.mean(means,axis=0))*np.sqrt(counts[:,None])
+    Y = (means - np.mean(X,axis=0))*np.sqrt(counts[:,None])
     between_class = Y.T@Y
 
     return within_class, between_class
