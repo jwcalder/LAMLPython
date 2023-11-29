@@ -35,6 +35,7 @@ def mds(H,k=2,center=False):
 """
 We first consider a couple of toy problems. Play around with the dimension parameters or come up with examples yourself.
 """
+
 # %%
 #pip install -q graphlearning
 
