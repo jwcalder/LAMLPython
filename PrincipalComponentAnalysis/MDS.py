@@ -2,8 +2,11 @@
 """
 # Multidimensional Scaling (MDS) 
 
-This notebook gives a brief introduction to Multidimensional Scaling (MDS). Let us first define some helper functions that will compute MDS for us.
+This notebook gives a brief introduction to Multidimensional Scaling (MDS). Let us first define some helper functions that will compute MDS for us and install graphlearning.
 """
+
+# %%
+#pip install -q graphlearning
 
 # %%
 import numpy as np
@@ -35,9 +38,6 @@ def mds(H,k=2,center=False):
 """
 We first consider a couple of toy problems. Play around with the dimension parameters or come up with examples yourself.
 """
-
-# %%
-#pip install -q graphlearning
 
 # %%
 import matplotlib.pyplot as plt
