@@ -75,6 +75,7 @@ and the gradient is
   \nabla f(x,y) = (x, y^3).
 \end{equation}
 """
+
 # %%
 #Function you wish to minimize
 def f(x,y):
