@@ -370,12 +370,14 @@ Does this do a better job approximating $f(x)=x$ near the endpoints?
 
 # %%
 
+
 # %%
 """
 4. Apply the linear classifier above (i.e., the perceptron) to binary classification of MNIST digits.
 """
 
 # %%
+
 
 # %%
 """
