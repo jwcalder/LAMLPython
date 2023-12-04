@@ -48,7 +48,6 @@ z = torch.sum(x**3)
 z.backward() #Invokes backpropgation to compute gradient with chain rule.
 
 #A second example, after already computing the first above
-grad = 3*x**2
 w = x**2
 w.backward()
 
