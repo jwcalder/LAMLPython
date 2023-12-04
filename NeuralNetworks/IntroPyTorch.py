@@ -12,7 +12,7 @@ The code below gives a simple example of the autograd feature in Pytorch. This m
 # %%
 import torch
 x = torch.tensor(4.0, requires_grad = True)
-z = torch.sum(x**3)
+z = x**3
 
 z.backward() #Invokes backpropgation to compute gradient with chain rule.
 
@@ -44,7 +44,7 @@ It is important to point out that gradients get accumulated in PyTorch, which ma
 # %%
 import torch
 x = torch.tensor(4.0, requires_grad = True)
-z = torch.sum(x**3)
+z = x**3
 z.backward() #Invokes backpropgation to compute gradient with chain rule.
 
 #A second example, after already computing the first above
