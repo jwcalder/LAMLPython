@@ -1,5 +1,3 @@
-import sys
-
 # %%
 """
 #Intro to Pytorch
