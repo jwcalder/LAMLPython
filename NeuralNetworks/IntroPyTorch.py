@@ -387,13 +387,3 @@ Does this do a better job approximating $f(x)=x$ near the endpoints?
 # %%
 
 
-
-
-
-
-
-
-
-
-
-
