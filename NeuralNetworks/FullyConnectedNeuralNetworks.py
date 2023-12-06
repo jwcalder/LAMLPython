@@ -2,7 +2,7 @@
 """
 # Fully Connected Neural Networks
 
-This notebook gives an introduction to training fully connected neural networks in PyTorch.
+This notebook gives an introduction to training fully connected neural networks in PyTorch. Turn on the GPU in Edit -> Notebook Settings.
 """
 
 # %%
