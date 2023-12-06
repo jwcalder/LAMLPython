@@ -298,6 +298,16 @@ for i in range(20):
 
 # %%
 """
+In order to try to gain some insight into how the network performs, let's plot the weight matrices in the hidden layers. Unfortunately this is not so helpful here.
+"""
+
+# %%
+I = model.fc1.weight.detach().cpu().numpy()
+I = I/np.max(np.absolute(I))/2 + 0.5
+img = gl.utils.image_grid(I,n_rows=8,n_cols=8,return_image=True)
+
+# %%
+"""
 ##Exercises
 1. Try reducing the train size and see if you can get the network to overfit (which means the training accuracy is much larger than the testing accuracy).
 2. Try changing the number of hidden nodes, and the number of layers in the network. How is the accuracy affected?
