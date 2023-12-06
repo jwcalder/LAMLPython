@@ -241,7 +241,7 @@ Let's first load MNIST and display some images.
 import graphlearning as gl
 
 #Load MNIST data
-x,y = gl.datasets.load('mnist',metric='raw')
+x,y = gl.datasets.load('mnist')
 
 #Display images
 gl.utils.image_grid(x,n_rows=16,n_cols=16)
