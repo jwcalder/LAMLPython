@@ -304,14 +304,15 @@ In order to try to gain some insight into how the network performs, let's plot t
 # %%
 I = model.fc1.weight.detach().cpu().numpy()
 I = I/np.max(np.absolute(I))/2 + 0.5
-img = gl.utils.image_grid(I,n_rows=8,n_cols=8,return_image=True)
+img = gl.utils.image_grid(I,n_rows=8,n_cols=8)
 
 # %%
 """
 ##Exercises
 1. Try reducing the train size and see if you can get the network to overfit (which means the training accuracy is much larger than the testing accuracy).
-2. Try changing the number of hidden nodes, and the number of layers in the network. How is the accuracy affected?
-3. Pick a new classification dataset publicly available online. For example, you can browse [Kaggle](https://www.kaggle.com/) for general data science datasets, [Torch Datasets](https://pytorch.org/vision/stable/datasets.html) for image classification problems, [sklearn datasets](https://scikit-learn.org/stable/datasets.html), or [GraphLearning](https://jwcalder.github.io/GraphLearning/datasets.html#graphlearning.datasets.load). Train a neural network classifier on your new dataset. The code below will get you started with graphlearning.
+2. Try one of the alternative losses to softmax+negative log likelihood discussed in the lecture slides. How does it compare?
+3. Try changing the number of hidden nodes, and the number of layers in the network. How is the accuracy affected?
+4. Pick a new classification dataset publicly available online. For example, you can browse [Kaggle](https://www.kaggle.com/) for general data science datasets, [Torch Datasets](https://pytorch.org/vision/stable/datasets.html) for image classification problems, [sklearn datasets](https://scikit-learn.org/stable/datasets.html), or [GraphLearning](https://jwcalder.github.io/GraphLearning/datasets.html#graphlearning.datasets.load). Train a neural network classifier on your new dataset. The code below will get you started with graphlearning.
 """
 
 # %%
