@@ -286,7 +286,7 @@ for i in range(20):
         test_accuracy = torch.sum(pred == target_test)/len(pred)
         pred = torch.argmax(model(data_train),axis=1)
         train_accuracy = torch.sum(pred == target_train)/len(pred)
-        print(i,test_accuracy*100,train_accuracy*100)
+        print(i,test_accuracy.item()*100,train_accuracy.item()*100)
 
     #Training mode, run data through neural network in mini-batches (SGD)
     for j in range(0,len(target_train),batch_size):
