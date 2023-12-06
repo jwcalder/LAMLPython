@@ -277,8 +277,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.01)  #Learning rates
 
 #Training 
 print('Iteration,Testing Accuracy,Training Accuracy')
-t = 0
-for i in range(100):
+for i in range(20):
 
     #Model evaluation
     model.eval()
