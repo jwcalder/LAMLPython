@@ -68,7 +68,7 @@ use_cuda = cuda and torch.cuda.is_available()
 device = torch.device("cuda" if use_cuda else "cpu")
 print('Using ',device)
 
-T = 10**5 #Number of training iterstions
+T = 30000 #Number of training iterstions
 model = Net(num_hidden=10**3).to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.01)  #Learning rate
 #optimizer = optim.SGD(model.parameters(), lr=0.001)  #Regular gradient descent (very slow)
