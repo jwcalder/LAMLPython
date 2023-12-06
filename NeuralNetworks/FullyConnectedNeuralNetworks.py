@@ -91,7 +91,7 @@ for i in range(T):
 
     #Print Loss only every 1000 iterations
     if i % 1000 == 0:
-        print('Iteration: %d, Loss: %f'%(i,loss.item()),flush=True)
+        print('Iteration: %d, Loss: %f'%(i,loss.item()))
 
 #Plot the function and neural network
 model.eval()
@@ -286,7 +286,7 @@ for i in range(20):
         test_accuracy = torch.sum(pred == target_test)/len(pred)
         pred = torch.argmax(model(data_train),axis=1)
         train_accuracy = torch.sum(pred == target_train)/len(pred)
-        print('%d,%f,%f,%f'%(i,test_accuracy*100,train_accuracy*100,t),flush=True)
+        print(i,test_accuracy*100,train_accuracy*100)
 
     #Training mode, run data through neural network in mini-batches (SGD)
     for j in range(0,len(target_train),batch_size):
