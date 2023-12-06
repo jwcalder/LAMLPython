@@ -283,9 +283,9 @@ for i in range(100):
     #Model evaluation
     model.eval()
     with torch.no_grad():
-        pred = torch.argmax(model(data_test),axis=1).cpu()
+        pred = torch.argmax(model(data_test),axis=1)
         test_accuracy = torch.sum(pred == target_test)/len(pred)
-        pred = torch.argmax(model(data_train),axis=1).cpu()
+        pred = torch.argmax(model(data_train),axis=1)
         train_accuracy = torch.sum(pred == target_train)/len(pred)
         print('%d,%f,%f,%f'%(i,test_accuracy*100,train_accuracy*100,t),flush=True)
 
