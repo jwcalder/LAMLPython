@@ -289,8 +289,8 @@ for i in range(20):
         print(i,test_accuracy.item()*100,train_accuracy.item()*100)
 
     #Training mode, run data through neural network in mini-batches (SGD)
+    model.train()  
     for j in range(0,len(target_train),batch_size):
-        model.train()  
         optimizer.zero_grad()
         loss = F.nll_loss(model(data_train[j:j+batch_size,:]), target_train[j:j+batch_size])
         loss.backward()
