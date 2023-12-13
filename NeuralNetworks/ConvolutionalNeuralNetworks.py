@@ -42,6 +42,7 @@ class CNN(nn.Module):
 """
 Below we define functions to implement 1 training epoch using stochastic gradient descent and compute the test accuracy. These functions make use of PyTorch data loaders, which are convenient ways to load data sets and access minibatches for training.
 """
+
 # %%
 def train(model, device, train_loader, optimizer, epoch):
     model.train()
