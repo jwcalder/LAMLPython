@@ -122,6 +122,64 @@ for epoch in range(1, epochs + 1):
     train(model, device, train_loader, optimizer, epoch)
     test(model, device, test_loader)
 
+torch.save(model.state_dict(), "mnist_cnn.pt")
+
+# %%
+"""
+We now consider transfer learning from the MNIST to FashionMNIST data sets. We use the CNN trained on MNIST, but we freeze the convolutional layers and only train the fully connected layers.
+"""
+
+# %%
+#Training settings
+cuda = True   #Use GPU acceleration (Edit->Notebook Settings and enable GPU)
+batch_size = 64
+test_batch_size = 1000
+learning_rate = 1.0  #Learning rate
+gamma = 1.0     #Scheduler learning rate step
+epochs = 20
+
+#GPU
+use_cuda = cuda and torch.cuda.is_available()
+device = torch.device("cuda" if use_cuda else "cpu")
+print(device)
+
+#Train and Test Data Loader Setup
+train_kwargs = {'batch_size': batch_size}
+test_kwargs = {'batch_size': test_batch_size}
+
+if use_cuda:
+    cuda_kwargs = {'num_workers': 1,'pin_memory': True,'shuffle': True}
+    train_kwargs.update(cuda_kwargs)
+    test_kwargs.update(cuda_kwargs)
+
+transform = transforms.Compose([transforms.ToTensor()])
+dataset1 = datasets.FashionMNIST('./data', train=True, download=True,transform=transform)
+dataset2 = datasets.FashionMNIST('./data', train=False, transform=transform)
+train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
+test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
+
+#Load model trained on MNIST
+transfer_model = CNN()
+transfer_model.load_state_dict(torch.load("mnist_cnn.pt"))
+
+#Freeze all parameters in the model
+for p in transfer_model.parameters():
+    p.requires_grad = False
+
+#Replace the fully connected layers with new ones, 
+#which will have requires_grad=True by default
+transfer_model.fc1 = nn.Linear(1600, 1024)
+transfer_model.fc2 = nn.Linear(1024, 10)
+
+#Put model on the device
+transfer_model.to(device)
+
+#Optimization
+optimizer = optim.Adadelta(transfer_model.parameters(), lr=learning_rate)
+for epoch in range(1, epochs + 1):
+    train(transfer_model, device, train_loader, optimizer, epoch)
+    test(transfer_model, device, test_loader)
+
 # %%
 """
 ##Exercises
