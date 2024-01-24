@@ -6,7 +6,7 @@ This notebook gives an introduction to loading and displaying graphs using the [
 """
 
 # %%
-#pip -q install graphlearning
+#pip install -q graphlearning
 
 # %%
 """
