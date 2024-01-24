@@ -99,6 +99,35 @@ plt.title('k-nn graph')
 
 # %%
 """
+We can also view any triangulated surface as a graph.
+"""
+
+# %%
+import matplotlib.tri as mtri
+
+ax = plt.figure().add_subplot(projection='3d')
+u = np.linspace(0, 2.0 * np.pi, endpoint=True, num=50)
+v = np.linspace(-0.5, 0.5, endpoint=True, num=10)
+u, v = np.meshgrid(u, v)
+u, v = u.flatten(), v.flatten()
+x = (1 + 0.5 * v * np.cos(u / 2.0)) * np.cos(u)
+y = (1 + 0.5 * v * np.cos(u / 2.0)) * np.sin(u)
+z = 0.5 * v * np.sin(u / 2.0)
+
+# Triangulate parameter space to determine the triangles
+tri = mtri.Triangulation(u, v)
+edges = tri.edges
+
+ax.scatter(x,y,z,c='black',s=5)
+for t in range(edges.shape[0]):
+    i,j = edges[t,0],edges[t,1]
+    ax.plot([x[i],x[j]],[y[i],y[j]],[z[i],z[j]],c='black',linewidth=0.25)
+
+#ax.set_axis_off()
+ax.set_zlim(-1, 1)
+
+# %%
+"""
 We can also view any image as a graph, by simply connecting each pixel to its nearest neighbors. We will see later in the course that there are alternative, and sometimes better, ways to view images as graphs.
 """
 
