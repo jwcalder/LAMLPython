@@ -105,7 +105,7 @@ We can also view any triangulated surface as a graph.
 # %%
 import matplotlib.tri as mtri
 
-ax = plt.figure().add_subplot(projection='3d')
+ax = plt.figure(figsize=(10,10)).add_subplot(projection='3d')
 u = np.linspace(0, 2.0 * np.pi, endpoint=True, num=50)
 v = np.linspace(-0.5, 0.5, endpoint=True, num=10)
 u, v = np.meshgrid(u, v)
@@ -123,7 +123,7 @@ for t in range(edges.shape[0]):
     i,j = edges[t,0],edges[t,1]
     ax.plot([x[i],x[j]],[y[i],y[j]],[z[i],z[j]],c='black',linewidth=0.25)
 
-#ax.set_axis_off()
+ax.set_axis_off()
 ax.set_zlim(-1, 1)
 
 # %%
