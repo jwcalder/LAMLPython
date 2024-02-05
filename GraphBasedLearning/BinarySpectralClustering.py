@@ -115,7 +115,6 @@ Let's now try specral clustering on a real-world graph. We'll use Zachary's kara
 G = gl.datasets.load_graph('karate')
 L = G.labels
 v = G.fiedler_vector()
-v = -v*v[0] #Makes v[0] negative, to fix a consistent sign for the Fiedler vector,
 print('True Labels        ',L)
 print('Spectral Clustering',(v > 0).astype(int))
 
