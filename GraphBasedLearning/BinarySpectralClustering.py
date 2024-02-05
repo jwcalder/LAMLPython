@@ -132,12 +132,12 @@ plt.xlabel('Sorted member number')
 
 # %%
 """
-Inspecting the plot, we see that the Fiedler vector does perfectly separate the two groups if we threshold at a value slightly below zero. Inspecting the plot, and a bit of trial and error, yields $0.007$ as a good threshold. If you knew the desired sizes of the two groups, could you find an automatic way to select this threshold?
+Inspecting the plot, we see that the Fiedler vector does perfectly separate the two groups if we threshold at a value slightly below zero. Inspecting the plot, and a bit of trial and error, yields $0.07$ as a good threshold. If you knew the desired sizes of the two groups, could you find an automatic way to select this threshold?
 """
 
 # %%
 print('True Labels        ',L)
-print('Spectral Clustering',(v > 0.007).astype(int))
+print('Spectral Clustering',(v > 0.07).astype(int))
 
 # %%
 """
