@@ -114,7 +114,7 @@ for graph in graphs:
 """
 ## Exercise
 
-Try playing around with different values for the teleportation paramter $\alpha$. How does
+Try playing around with different values for the teleportation paramter $\alpha$. 
 """
 
 # %%
