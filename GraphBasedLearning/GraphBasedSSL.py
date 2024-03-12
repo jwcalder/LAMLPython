@@ -86,6 +86,55 @@ print(labels[ind_incorrect][:10])
 
 # %%
 """
+We now give an example of image denoising using graph-based regression.
+"""
+
+# %%
+import graphlearning as gl
+from scipy.sparse import identity
+
+#Load and subsample cow image
+img = gl.datasets.load_image('cow')
+img = img[::2,::2]
+m,n,c = img.shape
+
+#Add noise to image
+img_noisy = np.clip(img + 0.05*np.random.randn(m,n,c),0,1)
+
+#Plot clean and noisy image
+plt.figure()
+plt.imshow(img,vmin=0,vmax=1)
+plt.title('Clean Cow')
+plt.figure()
+plt.imshow(img_noisy,vmin=0,vmax=1)
+plt.title('Noisy Cow')
+
+#Denoise with graph-based regression
+lam = 0.1
+eps=5
+eps_f=0.15
+
+#Build graph
+x,y = np.mgrid[:m,:n]
+x,y = x.flatten(),y.flatten()
+X = np.vstack((x,y)).T
+
+#Features of image (pixels)
+F = np.reshape(img_noisy,(m*n,c))
+W = gl.weightmatrix.epsilon_ball(X,eps,features=F,epsilon_f=eps_f,zero_diagonal=True)
+G = gl.graph(W)
+L = G.laplacian()
+
+#Denoising
+U = gl.utils.conjgrad(L + lam*identity(m*n),lam*F)
+img_denoised = np.reshape(U,(m,n,c))
+
+plt.figure()
+plt.imshow(img_denoised,vmin=0,vmax=1)
+plt.title('Denoised Cow')
+
+# %%
+"""
 ##Exercise
 
 1. Try playing around with the label rate above. How do things work for 1 label per class?
