@@ -192,7 +192,7 @@ plt.scatter(Y[:,0],Y[:,1],c=T,s=0.5)
 
 # %%
 """
-Below we show the t-SNE embedding of a parabola embedding in 10 dimensions.
+Below we show the t-SNE embedding of a parabola in 10 dimensional space.
 """
 
 # %%
