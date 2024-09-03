@@ -6,17 +6,17 @@ Paste your code for all three functions in the code block below.
 # %%
 import numpy as np
 
-def babylonian_sqrt(x):
+def babylonian_sqrt(S,eps=1e-6):
     ??
-    return ??
+    return x
 
 def cross_product(x,y):
     ??
-    return ??
+    return z
 
-def approx_pi(n):
+def approx_pi(N):
     ??
-    return ??
+    return pi
 
 # %%
 """
