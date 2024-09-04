@@ -109,7 +109,7 @@ Try to run the code below. What is wrong? Can you fix it?
 # %%
 for i in range(10):
     j = 2*i
-print(j)
+ print(j)
 
 # %%
 """
