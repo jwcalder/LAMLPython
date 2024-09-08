@@ -216,7 +216,20 @@ print('x dot y = ',np.dot(x,y))
 # %%
 """
 The `np.sum` command is very useful in a variety of situations. Other operations, such as `np.mean`, `np.median`, etc., are available as well.
+
+In fact, most mathamatical operations work fine with NumPy arrays, and work elementwise. This includes the power operation $**$, and any special functions in NumPy. Some examples are below.
 """
+
+# %%
+import numpy as np
+
+A = np.reshape(np.arange(10),(2,5))
+
+print(A)
+print(A**2) #Square all elements in A
+print(np.sin(A)) #Apply sin to all elements of A
+print(np.sqrt(A)) #Square root of all elements of A
+print(A**.5)
 
 # %%
 """
