@@ -214,7 +214,7 @@ Notes: You can use `abs` for absolute value in Python. Also note the use of the 
 # %%
 #This is not correct (it's a homework problem). It's just here 
 #so the Euclidean norm works below.
-import numpy
+import numpy as np
 def babylonian_sqrt(S,eps=1e-6):
     return np.sqrt(S)
 
