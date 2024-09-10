@@ -236,8 +236,6 @@ Why does the inequality above guarantee convergence (i.e., that $\epsilon_n\to 0
 # %%
 def add(x,y):
 
-    def add(x,y):
-
     n = len(x)
     if len(y) != n:
         print('Vectors are not the same length!')
