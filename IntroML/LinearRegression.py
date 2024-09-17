@@ -85,7 +85,6 @@ if rank != m:
 #Since the system is only 11x11, we don't care that much how Ax=b
 #solved. We'll just use numpy.linalg.solve
 w = np.linalg.solve(A,x_train.T@y_train)
-#Try using np.linalg.svd
 
 #print testing and training mean squared error
 train_error = np.sqrt(np.mean((y_train - x_train@w)**2))
@@ -111,6 +110,5 @@ print('Offest b: %.2f'%w[10])
 
 1. Play around with different values for the ridge regression parameter $\lambda$.
 2. The accuracy (error) depends on the random train/test split. Write a loop to run the regression over many different random train test splits and report the mean and standard deviation of the errors. (You can also implement a k-fold cross-validation.)
-3. Modify the code to use the SVD solution formula for ridge regression.
-4. Implement a polynomial regression on a single feature from the diabetes dataset. Can you fit the data better than linear regression can?
+3. Implement a polynomial regression on a single feature from the diabetes dataset. Can you fit the data better than linear regression can?
 """
