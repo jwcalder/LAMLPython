@@ -114,7 +114,7 @@ Here we tackle the problem of handwritten digit recognition with several basic m
 """
 
 # %%
-pip install graphlearning -q
+#pip install graphlearning -q
 
 # %%
 """
