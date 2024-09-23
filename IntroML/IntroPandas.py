@@ -134,7 +134,7 @@ covid_data.describe()
 
 # %%
 """
-Sometimes, when downloading a dataset, we do not get a URL to use with wget. This is the case with [Kaggle](https://www.kaggle.com/datasets). In this case, we can import the file by clicking on the folder on the left and clicking the upload button (the page with the up arrow). Then select the file from your hard drive to upload.
+Sometimes, when downloading a dataset, we do not get a URL we can use directly. This is the case with [Kaggle](https://www.kaggle.com/datasets). In this case, we can import the file by clicking on the folder on the left and clicking the upload button (the page with the up arrow). Then select the file from your hard drive to upload.
 
 """
 
