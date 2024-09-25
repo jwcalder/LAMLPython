@@ -159,7 +159,7 @@ print('SVM Testing Accuracy: %.2f%%'%test_acc)
 
 # %%
 """
-Let's plot some of the missclassified images.
+Let's plot some of the misclassified images.
 """
 
 # %%

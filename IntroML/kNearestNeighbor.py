@@ -80,7 +80,7 @@ plot_region(X,L,clf,res=0.1) #decrease res to get higher resolution of boundary,
 
 # %%
 """
-We now consdier some real data. We will use the breast cancer classification dataset from sklearn.
+We now consider some real data. We will use the breast cancer classification dataset from sklearn.
 """
 
 # %%
@@ -135,7 +135,7 @@ print('SVM Testing Accuracy: %.2f%%'%test_acc)
 ### Exercises
 
 1. Play round with different metrics and number of neighbors for the k-nearest neighbor classifier.
-2. Try running the classificadtion over many different random train/test splits and report the average and standard deviation of accuracy. (You can also use a k-fold cross-validation).
+2. Try running the classification over many different random train/test splits and report the average and standard deviation of accuracy. (You can also use a k-fold cross-validation).
 """
 
 # %%
@@ -206,7 +206,7 @@ print('knn Testing Accuracy: %.2f%%'%test_acc)
 
 # %%
 """
-Let's plot some of the missclassified images.
+Let's plot some of the misclassified images.
 """
 
 # %%
