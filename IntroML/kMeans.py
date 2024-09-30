@@ -133,8 +133,8 @@ gl.utils.image_grid(data, n_rows=10, n_cols=10, title='Some MNIST Images', fonts
 
 # %%
 #Binary clustering problem witih 2 digits
-class1 = 4
-class2 = 9
+class1 = 0
+class2 = 1
 
 #Subset data to two digits
 I = labels == class1
