@@ -26,7 +26,7 @@ z = np.array([1,2])
 X = np.vstack((z,-z))
 y = np.array([1,-1])
 
-#Random initializztion
+#Random initialization
 w = np.random.randn(2)
 b = np.random.randn(1)
 
