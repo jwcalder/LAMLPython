@@ -147,8 +147,8 @@ plt.scatter(Y[:,0],Y[:,1],c=L,s=10)
 1. Try another data set in graphlearning, like 'fashionmnist'.
 2. Use LDA as preprocessing for classification via support vector machines (SVM). Try MNIST, FashionMNIST or a data set from sklearn. Make sure to train LDA only on the training data.
 3. Rewrite the LDA code so that instead of using covariance shrinkage, we project the data onto the top principal components so that the within covariance matrix is nonsingular.
-4. Similar to 3, rewrite the LDA code to use the method in Exercise 5.2 in the LDA section of the course textbook.
-#"""
+4. Similar to 3, rewrite the LDA code to use the method in Exercise 4.2 in the LDA section of the course textbook.
+"""
 
 
 
