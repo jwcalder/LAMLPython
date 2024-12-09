@@ -18,8 +18,8 @@ def mds(H,k=2,center=False):
     #Only center for distance matrices
     if center:
         n = H.shape[0]
-        C = np.eye(n) - (1/n)*np.ones((n,n))
-        H = -0.5*C@H@C
+        J = np.eye(n) - (1/n)*np.ones((n,n))
+        H = -0.5*J@H@J
 
     #Need to sort eigenvalues, since H may not be positive semidef
     vals,V = sparse.linalg.eigsh(H,k=10*k,which='LM')
@@ -117,7 +117,7 @@ plt.scatter(P[:,0],P[:,1],c=L,s=10)
 1. Apply MDS to another data set in graphlearning, like 'fashionmnist'.
 2. Apply MDS to an sklearn dataset.
 2. Compare against PCA and LDA from previous notebooks.
-#"""
+"""
 
 
 
