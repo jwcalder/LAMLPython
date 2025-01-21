@@ -11,7 +11,7 @@ This notebook covers the power method and orthogonal iteration for the numerical
 
 The power method refers to the iteration
 $$\mathbf{x}_{k+1} = \frac{A\mathbf{x}_k}{\|A\mathbf{x}_k \|},$$
-which, under certain condition on the matrix $A$ and initial vector $\mathbf{x}_0$ converges to the dominant eigenvector of $A$.
+which, under certain conditions on the matrix $A$ and initial vector $\mathbf{x}_0$ converges to the dominant eigenvector of $A$.
 
 """
 
