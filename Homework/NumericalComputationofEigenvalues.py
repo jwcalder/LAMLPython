@@ -2,7 +2,7 @@
 """
 # Numerical Computation of Eigenvalues
 
-This notebook covers the power method and orthogonal iteration for the numerical computation of eigenvalues, with application exercises to computing principle directions in PCA on image data sets.
+This notebook covers the power method and orthogonal iteration for the numerical computation of eigenvalues, with application exercises to computing principal directions in PCA on image data sets.
 """
 
 # %%
@@ -104,7 +104,7 @@ print(np.unique(labels))
 
 # %%
 """
-Below we compute the covariance matrix and the top principle direction.
+Below we compute the covariance matrix and the top principal direction.
 """
 
 # %%
@@ -133,7 +133,7 @@ plt.title('Top principal direction')
 
 # %%
 """
-Compute the top principle component of the face data set (the top eigenface) using the power method on the covariance matrix $M$. Print the approximate eigenvalue $\mathbf{x}_k^TM\mathbf{x_k}$ and iterate until this stabilizes. How many iterations are required?
+Compute the top principal component of the face data set (the top eigenface) using the power method on the covariance matrix $M$. Print the approximate eigenvalue $\mathbf{x}_k^TM\mathbf{x_k}$ and iterate until this stabilizes. How many iterations are required?
 """
 
 # %%
