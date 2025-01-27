@@ -245,7 +245,7 @@ Steps 1-2 are the first orthogonalization, while steps 3-4 are the second one. I
 """
 ### Exercise
 
-Implement the Gram--Shmidt with re-orthogonalization in Python. Use the code template below. You may want to first *vectorize* your original Gram-Schmidt code so it does not have any loops, aside from the outer loop over $k$.
+Implement the Gram--Schmidt with re-orthogonalization in Python. Use the code template below. You may want to first *vectorize* your original Gram-Schmidt code so it does not have any loops, aside from the outer loop over $k$.
 """
 
 # %%
