@@ -236,7 +236,7 @@ There are several ways to address the numerical instability of Gram--Schmidt for
 3. Compute $t_{jk} = \mathbf{q}_j\cdot \mathbf{v}$ for $j \leq k-1$.
 4. Compute $\mathbf{x}_k = \mathbf{v} - \sum_{j=1}^{k-1} t_{jk}\mathbf{q}_j$.
 5. Set $r_{jk} = s_{jk} + t_{jk}$ for $j \leq k-1$.
-3. Set $r_{kk} = \|\mathbf{x}_k\|$ and $\mathbf{q}_k = \frac{\mathbf{x}_k}{r_{kk}}$.
+6. Set $r_{kk} = \|\mathbf{x}_k\|$ and $\mathbf{q}_k = \frac{\mathbf{x}_k}{r_{kk}}$.
 
 Steps 1-2 are the first orthogonalization, while steps 3-4 are the second one. In exact arithmetic we have $t_{jk}=0$ and steps 3-4 do nothing. In in-exact floating point arithmetic, steps 3-4 correct for a loss of orthogonality in the computation of $\mathbf{v}$.
 """
