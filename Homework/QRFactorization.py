@@ -12,17 +12,16 @@ where we recall that $Q^T$ is the inverse of $Q$, since $Q$ is orthonormal. As $
 
 The simplest way to compute a QR factorization is with the Gram-Schmidt algorithm. We assume $A$ is a square $n\times n$ non-singular matrix (i.e., its columns are linearly independent). The main steps of the Gram-Schmidt algorithm are presented in pseudocode below.
 
-Let $\mathbf{v}_1,\mathbf{v}_2,\dots,\mathbf{v}_n$ denote the columns of $A$. We initialize $\mathbf{u}_1=\mathbf{v}_1/r_{11}$, where $r_{11}=\|\mathbf{v}_1\|$ and repeat the steps below for $k=2$ through $k=n$.
+Let $\mathbf{a}_1,\mathbf{a}_2,\dots,\mathbf{a}_n$ denote the columns of $A$. We initialize $\mathbf{q}_1=\mathbf{a}_1/r_{11}$, where $r_{11}=\|\mathbf{a}_1\|$ and repeat the steps below for $k=2$ through $k=n$.
 
-1. Compute the coefficients of the $k$th column of $R$, that is $r_{jk} = \mathbf{u}_j\cdot \mathbf{v}_k$ for $j \leq k-1$, $r_{kk} = \sqrt{\|\mathbf{v}_k\|^2 - \sum_{j=1}^{k-1} r_{jk}^2}$, and $r_{jk}=0$ for $j>k$.
-2. Compute the $k$th column of $Q$, given by $\mathbf{u}_k = \frac{1}{r_{kk}}\left( \mathbf{v}_k - \sum_{j=1}^{k-1} r_{jk}\mathbf{u}_j \right)$.
+1. Compute $r_{jk} = \mathbf{q}_j\cdot \mathbf{a}_k$ for $j \leq k-1$ and $r_{jk}=0$ for $j>k$.
+2. Compute $\mathbf{x}_k = \mathbf{a}_k - \sum_{j=1}^{k-1} r_{jk}\mathbf{q}_j$ and $r_{kk} = \|\mathbf{x}_k\|$.
+3. Compute the $k$th column of $Q$, given by $\mathbf{q}_k = \frac{\mathbf{x}_k}{r_{kk}}$.
 
-The vectors $\mathbf{u}_k$ form the columns of $Q$, and by the definition of $\mathbf{u}_k$ we have
-$$\mathbf{v}_k = \sum_{j=1}^k r_{jk} \mathbf{u}_j,$$
+The vectors $\mathbf{q}_k$ form the columns of $Q$, and by definition
+$$\mathbf{a}_k = \sum_{j=1}^k r_{jk} \mathbf{q}_j,$$
 for all $k$, which is equivalent to the QR factorization statement
 $$A = QR.$$
-
-
 
 """
 
@@ -30,7 +29,7 @@ $$A = QR.$$
 """
 ### Exercise
 
-Write Python code for QR factorization using Gram-Schmidt. You can use the template in the code below; fill in the gaps. Try your algorithm on some toy matrices.
+Write Python code for QR factorization using Gram-Schmidt below. You can use the template in the code below. Try your algorithm on some toy matrices.
 """
 
 # %%
@@ -61,18 +60,18 @@ def QR_GS(A):
     Q = np.zeros((m,n))
     R = np.zeros((n,n))
 
-    #First step (note v_1 = A[:,0], v_2 = A[:,1], etc.)
-    R[0,0] =
-    Q[:,0] =
+    #First step 
+    R[0,0] = 
+    Q[:,0] = 
 
+    #The code you insert below can be vectorized
+    #so that only one line is required for each computation. 
+    #Alternatively you can add loops.
     for k in range(1,m):
-
-        r = 0
-        for j in range(k): #j=0,...,k-1
-            R[j,k] = #u_j dot v_k (v_k = A[:,k], u_j = Q[:,j])
-            r = r + R[j,k]**2
-        R[k,k] = #sqrt(norm(v_k)^2 - r)
-        Q[:,k] =
+        R[:k,k] =  #Define entries of R
+        xk = 
+        R[k,k] = 
+        Q[:,k] = 
 
     return Q,R
 
@@ -141,6 +140,8 @@ Note that both $\|A-QR\|$ and $\|I - Q^TQ\|$ are much larger than the machine pr
 
 # %%
 """
+### Ill-conditioned matrices
+
 Random matrices are in fact quite easy to compute with as they are often well-conditioned. The situation can be substantially worse for other matrices that are poorly conditioned. An example of an ill-conditioned matrix is the Hilbert matrix
 $$A = \begin{pmatrix}
 1 & \frac12 & \frac13 & \cdots & \frac1n\\
@@ -179,49 +180,23 @@ Check the performance of your QR algorithm on the Hilbert matrix.
 """
 
 # %%
+print('Original Gram-Schmidt')
 A = hilbert_matrix(20)
 Q,R = QR_GS(A)
-print(np.linalg.norm(A - Q@R,ord=np.inf))
-print(np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
+print('||A-QR||=',np.linalg.norm(A - Q@R))
+print('||I - Q^TQ||',np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
 
 # %%
 """
-Your code likely produced `nan` (not a number) and did not work. Can you figure out why? The Hilbert matrix is non-singular, but very poorly conditioned.
-
-
+Your code should produce $Q$ and $R$ with $A=QR$ up to machine precision, but the the matrix should $Q$ fail to be orthogonal. The loss of orthogonlity arises from floating point round-off errors that accumulate. These arise from the step $\mathbf{x}_k = \mathbf{a}_k - \sum_{j=1}^{k-1} r_{jk}\mathbf{q}_j$ when the result $\mathbf{x}_k$ is very small compared to the two terms in the difference (i.e., $\mathbf{a}_k$ is nearly in the span $\mathbf{q}_1,\dots,\mathbf{q_{k-1}}$). This occurs when the matrix $A$ is ill-conditioned.
 """
 
 # %%
 """
-### Exercise
+### Floating point round-off errors
 
-To fix this, modify your QR code to do the computation in the following way.
-
-1. Compute some of the coefficients of the $k$th column of $R$, that is $r_{jk} = \mathbf{u}_j\cdot \mathbf{v}_k$ for $j \leq k-1$ and $r_{jk}=0$ for $j>k$.
-2. Compute $\mathbf{x}_k = \mathbf{v}_k - \sum_{j-1}^{k-1} r_{jk}\mathbf{u}_j$ and $r_{kk} = \|\mathbf{x}_k\|$.
-3. Compute the $k$th column of $Q$,  $\mathbf{u}_k = \frac{\mathbf{x}_k}{r_{kk}}$.
-
-After making your modifications, try the Hilbert matrix again.
+If this is your first experience thinking about floating point numbers and roundoff errors, try running the code below, which should return 1 (it does not, due to accumulation of floating point roundoff errors, which is particularly bad when operating with very small and very large numbers at the same time).
 """
-
-# %%
-A = hilbert_matrix(20)
-Q,R = QR_GS(A)
-print(np.linalg.norm(A - Q@R,ord=np.inf))
-print(np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
-
-# %%
-"""
-Your code should run this time and produce real numbers. You should see that $A=QR$ up to machine precision, but that $Q$ is very var from being orthogonal. This is the result of the accumulation of floating point roundoff errors, which is most evident in ill-conditioned matrices like the Hilbert matrix.
-
-If this is your first experience thinking about floating point numbers and roundoff errors, try running the code below, which should return 1 (it does not, due to accumulation of floating point roundoff errors, which is particularly bad when operating with very small and very large numbers at the same time). The exercise above also illustrates how the way a computation is performed can matter, even if it is mathematically equivalent!
-"""
-
-# %%
-print(1+1e-16)
-print(0.6 == 0.6)
-print(0.1 + 0.2 + 0.3 == 0.6)
-print(0.1 + 0.2 + 0.3)
 
 # %%
 n = int(1e6)
@@ -241,11 +216,100 @@ print(c-b)
 
 # %%
 """
+Below are some even simpler examples of round-off error.
+"""
+
+# %%
+print(1+1e-16)
+print(0.6 == 0.6)
+print(0.1 + 0.2 + 0.3 == 0.6)
+print(0.1 + 0.2 + 0.3)
+
+# %%
+"""
+### Re-orthogonalization
+
+There are several ways to address the numerical instability of Gram--Schmidt for QR factorization. Here, we will use the re-orthogonalization trick, which essentially just repeats the orthogonalization step a second time. The steps are given below.
+
+1. Compute $s_{jk} = \mathbf{q}_j\cdot \mathbf{a}_k$ for $j \leq k-1$.
+2. Compute $\mathbf{v} = \mathbf{a}_k - \sum_{j=1}^{k-1} s_{jk}\mathbf{q}_j$.
+3. Compute $t_{jk} = \mathbf{q}_j\cdot \mathbf{v}$ for $j \leq k-1$.
+4. Compute $\mathbf{x}_k = \mathbf{v} - \sum_{j=1}^{k-1} t_{jk}\mathbf{q}_j$.
+5. Set $r_{jk} = s_{jk} + t_{jk}$ for $j \leq k-1$.
+3. Set $r_{kk} = \|\mathbf{x}_k\|$ and $\mathbf{q}_k = \frac{\mathbf{x}_k}{r_{kk}}$.
+
+Steps 1-2 are the first orthogonalization, while steps 3-4 are the second one. In exact arithmetic we have $t_{jk}=0$ and steps 3-4 do nothing. In in-exact floating point arithmetic, steps 3-4 correct for a loss of orthogonality in the computation of $\mathbf{v}$.
+"""
+
+# %%
+"""
+### Exercise
+
+Implement the Gram--Shmidt with re-orthogonalization in Python. Use the code template below. You may want to first *vectorize* your original Gram-Schmidt code so it does not have any loops, aside from the outer loop over $k$.
+"""
+
+# %%
+def QR_GS_RO(A):
+    """QR via Gram-Schmidt with Re-orthogonalization
+    ======
+    Produces a QR factorization via standard Gram-Schmidt.
+    The algorithm is numerically unstable and may not return orthonormal Q.
+
+    Parameters
+    ----------
+    A : numpy array, float
+        Non-singular matrix to perform QR on. A should be mxn with m >= n
+        and all columns linearly independent.
+
+    Returns
+    -------
+    Q : numpy array, float
+        Orthogonal basis.
+    R : numpy array, float
+        Upper triangular matrix R so that A=QR
+    """
+
+    #Get shapes of matrices and initialize Q,R
+    m,n = A.shape
+    Q = np.zeros((m,n))
+    R = np.zeros((n,n))
+
+    #First step 
+    R[0,0] = 
+    Q[:,0] = 
+
+    for k in range(1,m):
+
+        #First orthogonalization
+        s = 
+        v = 
+
+        #Re-orthogonalization
+        t = 
+        xk = 
+
+        #Set entries of Q and R
+        R[:k,k] = s + t
+        R[k,k] = np.linalg.norm(xk)
+        Q[:,k] = xk/R[k,k]
+
+    return Q,R
+
+# %%
+"""
+
+"""
+
+# %%
+print('\nGram-Schmidt with reorthogonalization')
+A = hilbert_matrix(20)
+Q,R = QR_GS_RO(A)
+print('||A-QR||=',np.linalg.norm(A - Q@R))
+print('||I - Q^TQ||',np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
+
+# %%
+"""
 ### Additional exercises
-
-
-
-
 
 """
 
@@ -253,7 +317,7 @@ print(c-b)
 """
 1. QR algorithms in Python packages.
   * Find an implementation of QR factorization in Numpy or Scipy (or any other Python package).
-  * Compare the implementation of QR that you found to Gram-Schmidt and Modified Gram-Schmidt. Compute both $\|A-QR\|$ and $\|I - Q^TQ\|$ for all three methods. Try random matrices, and ill-conditioned ones.
+  * Compare the implementation of QR that you found to the original Gram--Schmidt as well as the re-orthogonalized version. Compute both $\|A-QR\|$ and $\|I - Q^TQ\|$ for all three methods. Try random matrices, and ill-conditioned ones.
   * Can you find out what algorithm is used to compute QR for the implementation you found?
   * Compare the run-times of all three algorithms for large matrices, say around $1000\times 1000$.
 """
@@ -261,10 +325,35 @@ print(c-b)
 # %%
 import time
 
-#Recall this is how we can time the execution of code in python
+A = hilbert_matrix(20)
+
+#Gram-Schmidt QR
+print('\nGram-Schmidt')
+Q,R = QR_GS(A)
+print(np.linalg.norm(A - Q@R,ord=np.inf))
+print(np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
+
+#Gram-Schmidt QR with re-orthogonalization
+print('\nGram-Schmidt with re-orthogonalization')
+Q,R = QR_GS_RO(A)
+print(np.linalg.norm(A - Q@R,ord=np.inf))
+print(np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
+
+#Insert your code to compare to Numpy or Scipy
+print('\nNumpy or Scipy')
+
+#Computation time
+A = np.random.rand(2000,2000)
 start_time = time.time()
-#Write code
-print("Time taken: %s seconds." % (time.time() - start_time))
+Q,R = QR_GS(A)
+print("\nGram-Schmidt: %s seconds." % (time.time() - start_time))
+
+start_time = time.time()
+Q,R = QR_GS_RO(A)
+print("\nGram-Schmidt with re-orthogonalization: %s seconds." % (time.time() - start_time))
+
+#Insert your code to compare to Numpy or Scipy
+print("\nNumpy or Scipy: %s seconds." % (time.time() - start_time))
 
 # %%
 """
@@ -272,3 +361,11 @@ print("Time taken: %s seconds." % (time.time() - start_time))
 """
 
 # %%
+n = 100
+A = np.random.rand(n,n)
+x_true = np.random.rand(n,1)
+b = A@x_true
+
+#Insert your code to solve the linear system Ax=b with your QR code
+
+
