@@ -188,7 +188,7 @@ print('||I - Q^TQ||',np.linalg.norm(Q.T@Q - np.eye(Q.shape[0])))
 
 # %%
 """
-Your code should produce $Q$ and $R$ with $A=QR$ up to machine precision, but the matrix should $Q$ fail to be orthogonal. The loss of orthogonlity arises from floating point round-off errors that accumulate. These arise from the step $\mathbf{x}_k = \mathbf{a}_k - \sum_{j=1}^{k-1} r_{jk}\mathbf{q}_j$ when the result $\mathbf{x}_k$ is very small compared to the two terms in the difference (i.e., $\mathbf{a}_k$ is nearly in the span $\mathbf{q}_1,\dots,\mathbf{q_{k-1}}$). This occurs when the matrix $A$ is ill-conditioned.
+Your code should produce $Q$ and $R$ with $A=QR$ up to machine precision, but the matrix should $Q$ fail to be orthogonal. The loss of orthogonality arises from floating point round-off errors that accumulate. These arise from the step $\mathbf{x}_k = \mathbf{a}_k - \sum_{j=1}^{k-1} r_{jk}\mathbf{q}_j$ when the result $\mathbf{x}_k$ is very small compared to the two terms in the difference (i.e., $\mathbf{a}_k$ is nearly in the span $\mathbf{q}_1,\dots,\mathbf{q_{k-1}}$). This occurs when the matrix $A$ is ill-conditioned.
 """
 
 # %%
