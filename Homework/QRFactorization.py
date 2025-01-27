@@ -297,7 +297,7 @@ def QR_GS_RO(A):
 
 # %%
 """
-
+Let's try the method on the Hilbert matrix. If your code is correct, you should find that $Q$ is orthogonal up to machine precision.
 """
 
 # %%
