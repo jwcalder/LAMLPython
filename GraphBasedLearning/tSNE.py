@@ -101,7 +101,7 @@ def tsne(X,perplexity=50,h=1,alpha=50,num_early=100,num_iter=1000):
             grad = 4*Z*GL((P-Q)*Q)@Y
 
         #Gradient descent
-        Y = Y - h*grad
+        Y -= h*grad
 
         #Percent complete
         if i % int(num_iter/10) == 0:
@@ -142,9 +142,10 @@ plt.ion()
 data, labels = gl.datasets.load('mnist')
 
 #Subsample MNIST
-X = data[labels <= 3]
-T = labels[labels <= 3]
-sub = np.random.choice(len(T),size=500)
+sz = 1000
+X = data[labels <= 4]
+T = labels[labels <= 4]
+sub = np.random.choice(len(T),size=sz)
 X = X[sub,:]
 T = T[sub]
 
@@ -153,7 +154,7 @@ pca = PCA(n_components=50)
 X = pca.fit_transform(X)
 
 #Run t-SNE
-Y,P = tsne(X,perplexity=30,h=1,alpha=15,num_early=100,num_iter=2000)
+Y,P = tsne(X,perplexity=30,h=sz,alpha=10,num_early=100,num_iter=500)
 
 #Create scatterplot of embedding
 plt.figure()
