@@ -121,7 +121,7 @@ X = np.vstack((x,y)).T
 
 #Features of image (pixels)
 F = np.reshape(img_noisy,(m*n,c))
-W = gl.weightmatrix.epsilon_ball(X,eps,features=F,epsilon_f=eps_f,zero_diagonal=True)
+W = gl.weightmatrix.epsilon_ball(X,eps,features=F,epsilon_f=eps_f)
 G = gl.graph(W)
 L = G.laplacian()
 
