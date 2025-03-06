@@ -227,7 +227,7 @@ plt.figure()
 plt.plot(x,f,label='Original')
 plt.plot(x,f_noisy,linewidth=0.5,label='Noisy')
 plt.plot(x,f_denoised,label='$\lambda=%d$'%lam)
-plt.legend(fontsize=20)
+plt.legend(fontsize=12)
 
 # %%
 """
