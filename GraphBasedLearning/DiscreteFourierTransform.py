@@ -75,33 +75,6 @@ def my_fft(z):
         Gzo = np.hstack((Gzo,Gzo))
         return Gze + np.exp(-2*np.pi*1j*k/m)*Gzo
 
-#def my_fft(f):
-#    """Computes the Discrete Fourier Transform (DFT) of f
-#    using the Fast Fourier Transform.
-#
-#    Args:
-#        f: Function to compute DFT of (real or complex vector)
-#
-#    Returns:
-#        Df: DFT of f
-#    """
-#
-#    n = len(f)
-#    k = np.arange(n)
-#    if n == 1:
-#        return f
-#    else:
-#        #DFT of even and odd parts, recursively
-#        Dfe = my_fft(f[::2])
-#        Dfo = my_fft(f[1::2])
-#
-#        #Periodically extend to length of f
-#        Dfe = np.hstack((Dfe,Dfe))
-#        Dfo = np.hstack((Dfo,Dfo))
-#
-#        #Combine Dfe and Dfo to get Df
-#        return Dfe + np.exp(-2*np.pi*1j*k/n)*Dfo
-
 def my_ifft(Gz):
     """Computes the inverse Discrete Fourier Transform (DFT) of Gz
         using the Fast Fourier Transform.
@@ -134,7 +107,7 @@ Now let's compare the CPU time for the naive DFT and our FFT implementation.
 # %%
 import time
 
-m = int(2**15)   #Approximately n=32,000
+m = int(2**15)   #Approximately m=32,000
 z = np.random.randn(m)
 
 start_time = time.time()
