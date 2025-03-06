@@ -16,37 +16,37 @@ We start with the FFT. Below, we define our basic DFT and inverse dft, which tak
 # %%
 import numpy as np
 
-def dft(f):
-    """Computes the Discrete Fourier Transform (DFT) of f
+def dft(z):
+    """Computes the Discrete Fourier Transform (DFT) of z
 
     Args:
-        f: Function to compute DFT of (real or complex vector)
+        z: Function to compute DFT of (real or complex vector)
 
     Returns:
-        Df: DFT of f
+        Gz: DFT of z
     """
-    n = len(f)
-    k = np.arange(n)
-    Df = np.zeros(n,dtype='complex')
-    for l in range(n):
-        Df[l] =  np.sum(f*np.exp(-2*np.pi*1j*k*l/n))
-    return Df
+    m = len(z)
+    k = np.arange(m)
+    Gz = np.zeros(m,dtype='complex')
+    for l in range(m):
+        Gz[l] =  np.sum(z*np.exp(-2*np.pi*1j*k*l/m))
+    return Gz
 
-def idft(Df):
-    """Computes the inverse Discrete Fourier Transform (DFT) of Df
+def idft(Gz):
+    """Computes the inverse Discrete Fourier Transform (DFT) of Gz
 
     Args:
-        Df: Function to compute iDFT of (real or complex vector)
+        Gz: Function to compute iDFT of (real or complex vector)
 
     Returns:
-        f: Inverse DFT of Df
+        z: Inverse DFT of Gz
     """
-    n = len(Df)
-    k = np.arange(n)
-    f = np.zeros(n,dtype='complex')
-    for l in range(n):
-        f[l] =  np.sum(Df*np.exp(2*np.pi*1j*k*l/n))/n
-    return f
+    m = len(Gz)
+    k = np.arange(m)
+    z = np.zeros(m,dtype='complex')
+    for l in range(m):
+        z[l] =  np.sum(Gz*np.exp(2*np.pi*1j*k*l/m))/m
+    return z
 
 # %%
 """
@@ -54,45 +54,66 @@ Let's now define the FFT and inverse FFT, using recursive programming.
 """
 
 # %%
-def my_fft(f):
-    """Computes the Discrete Fourier Transform (DFT) of f
+def my_fft(z):
+    """Computes the Discrete Fourier Transform (DFT) of z
     using the Fast Fourier Transform.
 
     Args:
-        f: Function to compute DFT of (real or complex vector)
+        z: Function to compute DFT of (real or complex vector)
 
     Returns:
-        Df: DFT of f
+        Gz: DFT of z
     """
-
-    n = len(f)
-    k = np.arange(n)
-    if n == 1:
-        return f
+    m = len(z)
+    k = np.arange(m)
+    if m == 1:
+        return z
     else:
-        #DFT of even and odd parts, recursively
-        Dfe = my_fft(f[::2])
-        Dfo = my_fft(f[1::2])
+        Gze = my_fft(z[::2])
+        Gzo = my_fft(z[1::2])
+        Gze = np.hstack((Gze,Gze))
+        Gzo = np.hstack((Gzo,Gzo))
+        return Gze + np.exp(-2*np.pi*1j*k/m)*Gzo
 
-        #Periodically extend to length of f
-        Dfe = np.hstack((Dfe,Dfe))
-        Dfo = np.hstack((Dfo,Dfo))
+#def my_fft(f):
+#    """Computes the Discrete Fourier Transform (DFT) of f
+#    using the Fast Fourier Transform.
+#
+#    Args:
+#        f: Function to compute DFT of (real or complex vector)
+#
+#    Returns:
+#        Df: DFT of f
+#    """
+#
+#    n = len(f)
+#    k = np.arange(n)
+#    if n == 1:
+#        return f
+#    else:
+#        #DFT of even and odd parts, recursively
+#        Dfe = my_fft(f[::2])
+#        Dfo = my_fft(f[1::2])
+#
+#        #Periodically extend to length of f
+#        Dfe = np.hstack((Dfe,Dfe))
+#        Dfo = np.hstack((Dfo,Dfo))
+#
+#        #Combine Dfe and Dfo to get Df
+#        return Dfe + np.exp(-2*np.pi*1j*k/n)*Dfo
 
-        #Combine Dfe and Dfo to get Df
-        return Dfe + np.exp(-2*np.pi*1j*k/n)*Dfo
-
-def my_ifft(Df):
-    """Computes the inverse Discrete Fourier Transform (DFT) of Df
+def my_ifft(Gz):
+    """Computes the inverse Discrete Fourier Transform (DFT) of Gz
         using the Fast Fourier Transform.
 
     Args:
-        Df: Function to compute iDFT of (real or complex vector)
+        Gz: Function to compute iDFT of (real or complex vector)
 
     Returns:
-        f: Inverse DFT of Df
+        z: Inverse DFT of Gz
     """
 
-    return np.conjugate(my_fft(np.conjugate(f)))/len(f)
+    return np.conjugate(my_fft(np.conjugate(Gz)))/len(Gz)
 
 # %%
 """
@@ -100,10 +121,10 @@ Let's compare our FFT with the DFT we programmed last time, to make sure they wo
 """
 
 # %%
-n = 1024
-f = np.random.randn(n)
-print(np.max(np.absolute(my_fft(f) - dft(f))))
-print(np.max(np.absolute(my_ifft(f) - idft(f))))
+m = 1024
+z = np.random.randn(m)
+print(np.max(np.absolute(my_fft(z) - dft(z))))
+print(np.max(np.absolute(my_ifft(z) - idft(z))))
 
 # %%
 """
@@ -113,15 +134,15 @@ Now let's compare the CPU time for the naive DFT and our FFT implementation.
 # %%
 import time
 
-n = int(2**15)   #Approximately n=32,000
-f = np.random.randn(n)
+m = int(2**15)   #Approximately n=32,000
+z = np.random.randn(m)
 
 start_time = time.time()
-Df = dft(f)
+Gz = dft(z)
 print("Naive DFT: %s s" % (time.time() - start_time))
 
 start_time = time.time()
-Df = my_fft(f)
+Gz = my_fft(z)
 print("Our FFT: %s s" % (time.time() - start_time))
 
 # %%
@@ -133,19 +154,19 @@ SciPy has a very efficient implementation of the FFT. Let's compare our version 
 from scipy.fft import fft
 from numpy.fft import fft as numpy_fft
 
-n = int(2**20)   #Approximately n=1 million
-f = np.random.randn(n)
+m = int(2**20)   #Approximately n=1 million
+z = np.random.randn(m)
 
 start_time = time.time()
-Df = fft(f)
+Gz = fft(z)
 print("SciPy FFT: %s s" % (time.time() - start_time))
 
 start_time = time.time()
-Df = numpy_fft(f)
+Gz = numpy_fft(z)
 print("NumPy FFT: %s s" % (time.time() - start_time))
 
 start_time = time.time()
-Df = my_fft(f)
+Gz = my_fft(z)
 print("Our FFT: %s s" % (time.time() - start_time))
 
 # %%
