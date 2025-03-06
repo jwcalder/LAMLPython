@@ -9,7 +9,7 @@ In this notebook we explore the Fast Fourier Transform (FFT) and and application
 """
 ## The Fast Fourier Transform (FFT)
 
-We start with the FFT. Below, we define our basic DFT and inverse dft, which take $O(n^2)$ operations for a signal of length $n$.
+We start with the FFT. Below, we define our basic DFT and inverse dft, which take $O(m^2)$ operations for a signal of length $m$.
 
 """
 
