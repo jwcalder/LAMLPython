@@ -110,7 +110,7 @@ plt.imshow(img_noisy,vmin=0,vmax=1)
 plt.title('Noisy Cow')
 
 #Denoise with graph-based regression
-lam = 0.1
+lam = 10
 eps=5
 eps_f=0.15
 
@@ -120,13 +120,13 @@ x,y = x.flatten(),y.flatten()
 X = np.vstack((x,y)).T
 
 #Features of image (pixels)
-F = np.reshape(img_noisy,(m*n,c))
-W = gl.weightmatrix.epsilon_ball(X,eps,features=F,epsilon_f=eps_f)
+Y = np.reshape(img_noisy,(m*n,c))
+W = gl.weightmatrix.epsilon_ball(X,eps,features=Y,epsilon_f=eps_f)
 G = gl.graph(W)
 L = G.laplacian()
 
 #Denoising
-U = gl.utils.conjgrad(L + lam*identity(m*n),lam*F)
+U = gl.utils.conjgrad(identity(m*n) + lam*L,Y)
 img_denoised = np.reshape(U,(m,n,c))
 
 plt.figure()
