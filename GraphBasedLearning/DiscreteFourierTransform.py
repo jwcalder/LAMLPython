@@ -189,7 +189,7 @@ def tikhonov_denoise(f,lam):
 
     n = len(f)
     k = np.arange(n)
-    G = 1/(1 + lam - lam*np.cos(2*np.pi*k/n))
+    G = 1/(1 + 2*lam - 2*lam*np.cos(2*np.pi*k/n))
     return ifft(G*fft(f)).real
 
 # %%
