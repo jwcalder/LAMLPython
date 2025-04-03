@@ -66,6 +66,22 @@ plt.legend(fontsize=16)
 
 # %%
 """
+To check the convergence rate, we can find a line of best fit. We see a rate of $0.4$ for $f(x_k)$, which means the error is reduced by a factor of $0.4$ at each iteration. This rate is the square of the rate for $\|x_k\|$, since $f$ is quadratic near the minimizer.
+"""
+
+# %%
+k = np.arange(len(f_vals))
+m,b = np.polyfit(k,np.log(f_vals),1)
+mu = np.exp(m)
+print('Convergence rate for f(x_k) (mu) = ', mu)
+
+m,b = np.polyfit(k,np.log(dist_vals),1)
+mu = np.exp(m)
+print('Convergence rate for x_k (mu) = ', mu)
+print('mu^2=',mu**2)
+
+# %%
+"""
 We can also visualize the path taken by gradient descent. Try playing around with the time step $\alpha$ and see how the path changes.
 """
 
