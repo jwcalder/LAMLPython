@@ -66,7 +66,9 @@ plt.legend(fontsize=16)
 
 # %%
 """
-To check the convergence rate, we can find a line of best fit. We see a rate of $0.4$ for $f(x_k)$, which means the error is reduced by a factor of $0.4$ at each iteration. This rate is the square of the rate for $\|x_k\|$, since $f$ is quadratic near the minimizer.
+To check the convergence rate, we can find a line of best fit in the log scale. That is, we expect the error curve is $y = C\mu^k$ for some $C>0$ and $0 < \mu < 1$, where $k$ is the iteration index. To find the convergence rate $\mu$, we take $\log$ on both sides to get $\log(y) = \log(C) + \log(\mu)k$. Thus, we can find a line of best fit of the form $\log(y) = b + mk$, and then $\mu = e^{m}$. 
+
+The code below does this, and we see a rate of $0.4$ for $f(x_k)$, which means the error is reduced by a factor of $0.4$ at each iteration. This rate is the square of the rate for $\|x_k\|$, since $f$ is quadratic near the minimizer.
 """
 
 # %%
@@ -110,7 +112,6 @@ plt.text(x,y-0.1,f'Final point=({x:.2f},{y:.2f})',horizontalalignment='right')
 
 1. Try increasing the step size $\alpha$. How large can you make $\alpha$ before gradient descent becomes unstable and does not converge? Can you estimate the Lipschitz constant $L$ of the gradient $\nabla f$ this way? (recall that $\alpha \leq \frac{1}{L}$ was our condition for convergence of gradient descent).
 2. Try using preconditioned gradient descent. For the preconditioner, use the diagonal of the Hessian matrix.
-3. Try defining a new function $f$ whose gradient is not Lipschitz. You can try, for example, $f(x,y) = |x| + |y|$. Try running gradient descent; what do you observe? Optimizing such functions is the subject of "non-smooth" optimization.
-4. Try minimizing a nonconvex function with several local minima and saddle points. For example, try the function
+3. Try minimizing a nonconvex function with several local minima and saddle points. For example, try the function
 $$f(x,y) = x^4 - 2x^2 + y^2.$$
 """
