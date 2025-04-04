@@ -12,7 +12,8 @@ $$A = \begin{pmatrix}
 4 & -1 & 0 & 0\\
 -1 & 4 & -1 & 0\\  
 0 & -1 & 4 & -1 \\  
-0 & 0 & -1 & 4 \\  
+0 & 0 & -1 & 4 
+\end{pmatrix},
 $$
 which appears in the linear solvers for certain partial differential equations involving the Laplacian. 
 """
