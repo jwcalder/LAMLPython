@@ -129,6 +129,12 @@ for i in range(10000):
     z = w - 2*alpha*X.T@(X@w-Y)
     w = shrink(z,2*alpha*lam)
 
+#print testing and training mean squared error
+train_error = np.sqrt(np.mean((y_train - x_train@w)**2))
+test_error = np.sqrt(np.mean((y_test - x_test@w)**2))
+print('Training error: ',train_error)
+print('Testing error: ',test_error)
+
 print('\nFeature weights:')
 print('================')
 for i in range(len(feature_labels)):
