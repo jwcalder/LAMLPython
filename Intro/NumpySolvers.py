@@ -135,7 +135,7 @@ print('Eigenvalues=',vals)
 """
 ### Exercises
 
-1. Approximate the solution of the large sparse linear system above using a truncated eigenvector decomposition. That is, approximate the inverse matrix by $Q_k\Lambda_k^{-1},Q_k^T$, where we use only the first $k=100$ eigenvectors (in this case use the smallest). Compare your results to the conjugate gradient method. 
+1. Approximate the solution of the large sparse linear system above using a truncated eigenvector decomposition. That is, approximate the inverse matrix by $Q_k\Lambda_k^{-1}Q_k^T$, where we use only the first $k=100$ eigenvectors (in this case use the smallest). Compare your results to the conjugate gradient method. 
 2. Use `numpy.random.randn` to construct a moderately sized rectangular matrix $X$. Compute the singular value decomposition of $X$ by using the code above to find the eigenvector decomposition of $A=X^TX$. Compare your results to `np.linalg.svd`. 
 3. Repeat exercise 2 with a large sparse matrix $X$ and use `scipy.sparse.eigsh` instead, comparing to `scipy.sparse.svds`. One possible choice for $X$ is the $(n-1)\times n$ matrix with $x_{i,i-1}=-1$, $x_{i,i+1}=1$, and all other entries zero. 
 """
