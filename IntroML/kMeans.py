@@ -19,7 +19,7 @@ def kmeans(X,k,visualize=False,T=200):
         T: Max number of iterations
 
     Returns:
-        Numpy array of labels obtained by binary k-means clustering
+        Numpy array of labels obtained by k-means clustering
     """
 
     #Number of data points
