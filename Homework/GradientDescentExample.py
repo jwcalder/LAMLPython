@@ -16,6 +16,8 @@ def grad_desc(f,grad_f,min_f,x0,num_steps=100,alpha=0.2,title='Gradient Descent'
         x -= alpha*grad_f(x)
         f_vals[i] = f(x) - min_f
 
+    print('Output of Gradient Descent=',x)
+
     plt.figure()
     plt.plot(f_vals, label='f(x_k)')
     plt.yscale('log')

@@ -8,13 +8,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def grad_desc(f,grad_f,min_f,x0,num_steps=100,alpha=0.2,title='Gradient Descent'):
+def cons_grad_desc(f,grad_f,min_f,x0,num_steps=100,alpha=0.2,title='Gradient Descent'):
     x = np.array(x0).astype(float)  #initial condition
 
+    B = np.array([[1,-1],[-1,1]])
     f_vals = np.zeros(num_steps)
     for i in range(num_steps):
-        x -= alpha*grad_f(x)
+        x -= alpha*B@grad_f(x)
         f_vals[i] = f(x) - min_f
+
+    print('Output of gradient descent=',x)
 
     plt.figure()
     plt.plot(f_vals, label='f(x_k)')
@@ -49,6 +52,8 @@ def grad_f3(x):
     return np.array([np.cos(x[0])*np.sin(x[1]), np.sin(x[0])*np.cos(x[1])])
 
 # %%
-grad_desc(f1,grad_f1,0,[1,1],num_steps=20,alpha=0.35,title='f1')
-grad_desc(f2,grad_f2,0,[1,1],num_steps=200,alpha=0.09,title='f2')
-grad_desc(f3,grad_f3,-1,[1,4],num_steps=200,alpha=0.08,title='f3')
+cons_grad_desc(f1,grad_f1,f1([4*np.pi/3,2*np.pi/3]),[0,2*np.pi],num_steps=20,alpha=0.25,title='f1')
+cons_grad_desc(f2,grad_f2,f2([20*np.pi/11,2*np.pi/11]),[0,2*np.pi],num_steps=20,alpha=0.02,title='f2')
+cons_grad_desc(f3,grad_f3,-1,[1,2*np.pi-1],num_steps=20,alpha=0.25,title='f3')
+
+
